@@ -1,2 +1,10 @@
-.venv/
+# Môi trường ảo
+venv/
+
+# File rác Python
 __pycache__/
+*.pyc
+
+# Cấu hình IDE cá nhân
+.vscode/
+.idea/
