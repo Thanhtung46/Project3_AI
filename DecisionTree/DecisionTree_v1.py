@@ -16,7 +16,7 @@ import handledata as dt
 from log import log_results
 
 # 1. Tạo thư mục output nếu chưa có
-output_dir = os.path.join(project_root, "Image", "V2")
+output_dir = os.path.join(project_root, "Image", "V1")
 os.makedirs(output_dir, exist_ok=True)
 
 # 2. Hàm để thử nghiệm các giá trị max_leaf_nodes khác nhau
@@ -49,16 +49,16 @@ rmse = np.sqrt(mse)
 r2 = r2_score(dt.y_valid, y_pred)
 
 # Log kết quả vào file chung để so sánh với V0
-log_results("Model V2 (Max Leaf Nodes)", mae, mse, rmse, r2)
+log_results("Model V1 (Max Leaf Nodes)", mae, mse, rmse, r2)
 
-# 5. Lưu hình ảnh vào thư mục V2
+# 5. Lưu hình ảnh vào thư mục V1
 # Vẽ cấu trúc cây
 plt.figure(figsize=(20,10))
 plot_tree(improved_model, 
           feature_names=dt.X.columns, 
-          filled=True, rounded=True, fontsize=10, max_depth=5)
-plt.title(f"Decision Tree Structure - V2 (max_leaf_nodes={best_tree_size})")
-plt.savefig(os.path.join(output_dir, 'Decision_Tree_Structure_v2.png'))
+          filled=True, rounded=True, fontsize=10, max_depth=3)
+plt.title(f"Decision Tree Structure - V1 (max_leaf_nodes={best_tree_size})")
+plt.savefig(os.path.join(output_dir, 'Decision_Tree_Structure_v1.png'))
 
 # Vẽ biểu đồ thực tế vs dự đoán
 plt.figure(figsize=(10, 6))
@@ -66,7 +66,7 @@ sns.scatterplot(x=dt.y_valid, y=y_pred, alpha=0.5)
 plt.plot([dt.y_valid.min(), dt.y_valid.max()], [dt.y_valid.min(), dt.y_valid.max()], '--r')
 plt.xlabel("Actual Price")
 plt.ylabel("Predicted Price")
-plt.title(f"Actual vs Predicted - V2 (MAE: {mae:,.0f})")
-plt.savefig(os.path.join(output_dir, 'Actual_vs_Predicted_V2.png'))
+plt.title(f"Actual vs Predicted - V1 (MAE: {mae:,.0f})")
+plt.savefig(os.path.join(output_dir, 'Actual_vs_Predicted_V1.png'))
 
-print("Đã hoàn thành Cải tiến 1 và lưu ảnh vào Image/V2!")
+print("Đã hoàn thành Cải tiến 1 và lưu ảnh vào Image/V1!")
