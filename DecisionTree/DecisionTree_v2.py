@@ -42,8 +42,13 @@ y_pred = model_v2.predict(X_valid_fs)
 mae = mean_absolute_error(dt.y_valid, y_pred)
 mse = mean_squared_error(dt.y_valid, y_pred)
 rmse = np.sqrt(mse)
-r2 = r2_score(dt.y_valid, y_pred)
-log_results("Model V2 - Feature Selection (Depth 5)", mae, mse, rmse, r2)
+
+r2_test = r2_score(dt.y_valid, y_pred)
+y_train_fix = dt.X_train_y if hasattr(dt, 'X_train_y') else dt.y_train
+r2_train = model_v2.score(X_train_fs, y_train_fix)
+
+gap = r2_train - r2_test
+log_results("Model V2 - Feature Selection (Depth 5)", mae, mse, rmse, r2_train, r2_test, gap)
 
 # 5. Vẽ biểu đồ Compare (Scatter)
 plt.figure(figsize=(10, 6))

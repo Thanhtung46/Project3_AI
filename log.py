@@ -1,12 +1,14 @@
 import os
 import pandas as pd
-def log_results(model_name, mae, mse, rmse, r2, file_name = "./Compare_Models/model_comparison.csv"):
+def log_results(model_name, mae, mse, rmse, train, test, gap, file_name = "./Compare_Models/model_comparison.csv"):
     results = {
         "Model Name" : [model_name],
-        "MAE" : [mae],
-        "MSE" : [mse],
-        "RMSE" : [rmse],
-        "R2_SCORE" : [r2]
+        "MAE" : [round(mae, 5)],
+        "MSE" : [round(mse, 5)],
+        "RMSE" : [round(rmse, 5)],
+        "R2 Train" : [round(train, 5)],
+        "R2 Test" : [round(test, 5)],
+        "Evaluate" : [round(gap, 5)]
     }
     df_new = pd.DataFrame(results)
 

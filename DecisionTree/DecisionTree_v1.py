@@ -15,11 +15,11 @@ if project_root not in sys.path:
 import handledata as dt
 from log import log_results
 
-# 1. Tạo thư mục output nếu chưa có
+# Tạo thư mục output nếu chưa có
 output_dir = os.path.join(project_root, "Image", "V1")
 os.makedirs(output_dir, exist_ok=True)
 
-# 2. Hàm để thử nghiệm các giá trị max_leaf_nodes khác nhau
+# Hàm để thử nghiệm các giá trị max_leaf_nodes khác nhau
 def get_mae(max_leaf_nodes, X_train, X_valid, y_train, y_valid):
     model = DecisionTreeRegressor(max_leaf_nodes=max_leaf_nodes, random_state=42)
     model.fit(X_train, y_train)
@@ -37,21 +37,27 @@ best_tree_size = min(scores, key=scores.get)
 
 print(f"Giá trị max_leaf_nodes tối ưu nhất: {best_tree_size}")
 
-# 3. Huấn luyện mô hình tối ưu nhất cho Cải tiến 1
+# Huấn luyện mô hình tối ưu nhất cho Cải tiến 1
 improved_model = DecisionTreeRegressor(max_leaf_nodes=best_tree_size, random_state=42)
 improved_model.fit(dt.X_train, dt.y_train)
 
-# 4. Đánh giá và lưu kết quả
+# Đánh giá và lưu kết quả
 y_pred = improved_model.predict(dt.X_valid)
 mae = mean_absolute_error(dt.y_valid, y_pred)
 mse = mean_squared_error(dt.y_valid, y_pred)
 rmse = np.sqrt(mse)
-r2 = r2_score(dt.y_valid, y_pred)
+
+r2_test = r2_score(dt.y_valid, y_pred)
+y_train_fix = dt.X_train_y if hasattr(dt, 'X_train_y') else dt.y_train
+r2_train = improved_model.score(dt.X_train, y_train_fix)
+
+# Tính khoảng cách Overfitting
+gap = r2_train - r2_test
 
 # Log kết quả vào file chung để so sánh với V0
-log_results("Model V1 (Max Leaf Nodes)", mae, mse, rmse, r2)
+log_results(f"Model V1 (Max Leaf Nodes {best_tree_size})", mae, mse, rmse, r2_train, r2_test, gap)
 
-# 5. Lưu hình ảnh vào thư mục V1
+# Lưu hình ảnh vào thư mục V1
 # Vẽ cấu trúc cây
 plt.figure(figsize=(20,10))
 plot_tree(improved_model, 

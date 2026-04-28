@@ -46,8 +46,10 @@ y_pred = model_v3.predict(X_valid)
 mae = mean_absolute_error(y_valid, y_pred)
 mse = mean_squared_error(y_valid, y_pred)
 rmse = np.sqrt(mse)
-r2 = r2_score(y_valid, y_pred)
-log_results("Model V3 - Missing Values (Depth 5)", mae, mse, rmse, r2)
+r2_test = r2_score(y_valid, y_pred)
+r2_train = model_v3.score(X_train, y_train)
+gap = r2_train - r2_test
+log_results("Model V3 - Missing Values (Depth 5)", mae, mse, rmse, r2_train, r2_test, gap)
 
 # 5. Vẽ biểu đồ Compare
 plt.figure(figsize=(10, 6))
