@@ -69,4 +69,16 @@ plt.ylabel("Predicted Price")
 plt.title(f"Actual vs Predicted - V1 (MAE: {mae:,.0f})")
 plt.savefig(os.path.join(output_dir, 'Actual_vs_Predicted_V1.png'))
 
+# Lấy độ quan trọng của các đặc trưng
+importances = improved_model.feature_importances_
+indices = np.argsort(importances)[-10:] 
+
+plt.figure(figsize=(10, 6))
+plt.barh(range(len(indices)), importances[indices], color='skyblue', align='center')
+plt.yticks(range(len(indices)), [dt.X.columns[i] for i in indices])
+plt.title(f"Top 10 Feature Importances - V1 (max_leaf_nodes={best_tree_size})")
+plt.xlabel("Relative Importance")
+plt.tight_layout()
+plt.savefig(os.path.join(output_dir, 'Feature_Importance_V1.png'))
+
 print("Đã hoàn thành Cải tiến 1 và lưu ảnh vào Image/V1!")
