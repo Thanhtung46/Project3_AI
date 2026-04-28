@@ -7,8 +7,10 @@ if project_root not in sys.path:
 import handledata as dt
 from sklearn.tree import DecisionTreeRegressor
 import numpy as np
+from train_script import grid
+
 # Khởi tạo mô hình cây quyết định bình thường
-baseline_model = DecisionTreeRegressor(random_state=42)
+baseline_model = grid.best_estimator_
 
 # Huấn luyện mô hình trên tập dữ liệu đã tiền xử lý
 baseline_model.fit(dt.X_train, dt.y_train) 
@@ -44,10 +46,18 @@ mse = mean_squared_error(dt.y_valid, y_pred)
 rmse = np.sqrt(mse) # Tính thêm RMSE vì Lab yêu cầu 
 
 """Căn bậc hai của MSE"""
-r2 = r2_score(dt.y_valid, y_pred)
-"""Đo mức độ mô hình giải thích được bao nhiêu variance của data"""
+# 1. R2 Test: Khả năng dự báo trên dữ liệu mới (y_pred đã có ở trên)
+r2_test = r2_score(dt.y_valid, y_pred)
+
+# 2. R2 Train: Khả năng học trên dữ liệu cũ
+# model.score tự động dùng X_train để dự đoán rồi so sánh với y_train
+r2_train = baseline_model.score(dt.X_train, dt.y_train)
+
+# 3. Overfitting Gap: Độ lệch giữa học và hành
+gap = r2_train - r2_test
+
 from log import log_results
-log_results("Model Base", mae, mse, rmse, r2)
+log_results("Model V0 - Baseline", mae, mse, rmse, r2_train, r2_test, gap)
 
 plt.figure(figsize=(10, 6))
 

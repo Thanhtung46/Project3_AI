@@ -55,7 +55,7 @@ r2_train = improved_model.score(dt.X_train, y_train_fix)
 gap = r2_train - r2_test
 
 # Log kết quả vào file chung để so sánh với V0
-log_results(f"Model V1 (Max Leaf Nodes {best_tree_size})", mae, mse, rmse, r2_train, r2_test, gap)
+log_results(f"Model V1 - Max Leaf Nodes {best_tree_size}", mae, mse, rmse, r2_train, r2_test, gap)
 
 # Lưu hình ảnh vào thư mục V1
 # Vẽ cấu trúc cây

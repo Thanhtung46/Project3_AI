@@ -27,7 +27,11 @@ y = df['Price']
 X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # 2. Huấn luyện với max_depth=5 để tăng độ chính xác
-model_v3 = DecisionTreeRegressor(random_state=42, max_depth=5)
+from train_script import grid
+
+# Khởi tạo mô hình cây quyết định bình thường
+model_v3 = grid.best_estimator_
+
 model_v3.fit(X_train, y_train)
 
 # 3. Vẽ cấu trúc cây (Chỉ hiển thị đến tầng thứ 3 để hình đẹp trong báo cáo)
@@ -50,7 +54,7 @@ rmse = np.sqrt(mse)
 r2_test = r2_score(y_valid, y_pred)
 r2_train = model_v3.score(X_train, y_train)
 gap = r2_train - r2_test
-log_results("Model V3 - Missing Values (Depth 5)", mae, mse, rmse, r2_train, r2_test, gap)
+log_results("Model V3 - Missing Values", mae, mse, rmse, r2_train, r2_test, gap)
 
 # 5. Vẽ biểu đồ Compare Actual vs Predicted
 plt.figure(figsize=(10, 6))

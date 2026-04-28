@@ -25,7 +25,12 @@ selected_features = [dt.X.columns[i] for i in indices]
 # 2. Huấn luyện mô hình cải tiến với max_depth=5
 X_train_fs = dt.X_train[selected_features]
 X_valid_fs = dt.X_valid[selected_features]
-model_v2 = DecisionTreeRegressor(random_state=42, max_depth=5) # Huấn luyện độ sâu 5
+
+from train_script import grid
+
+# Khởi tạo mô hình cây quyết định bình thường
+model_v2 = grid.best_estimator_
+
 model_v2.fit(X_train_fs, dt.y_train)
 
 # 3. Vẽ cấu trúc cây (Chỉ hiển thị max_depth=3 để hình rõ nét)
@@ -50,7 +55,7 @@ y_train_fix = dt.X_train_y if hasattr(dt, 'X_train_y') else dt.y_train
 r2_train = model_v2.score(X_train_fs, y_train_fix)
 
 gap = r2_train - r2_test
-log_results("Model V2 - Feature Selection (Depth 5)", mae, mse, rmse, r2_train, r2_test, gap)
+log_results("Model V2 - Feature Selection", mae, mse, rmse, r2_train, r2_test, gap)
 
 # 5. Vẽ biểu đồ Compare (Scatter)
 plt.figure(figsize=(10, 6))
