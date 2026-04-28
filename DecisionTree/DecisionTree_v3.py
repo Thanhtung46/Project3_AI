@@ -30,16 +30,17 @@ X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, rando
 model_v3 = DecisionTreeRegressor(random_state=42, max_depth=5)
 model_v3.fit(X_train, y_train)
 
-# 3. Vẽ cấu trúc cây (Chỉ hiển thị đến tầng thứ 3 để hình đẹp)
+# 3. Vẽ cấu trúc cây (Chỉ hiển thị đến tầng thứ 3 để hình đẹp trong báo cáo)
 plt.figure(figsize=(33,20))
 plot_tree(model_v3, 
           feature_names=X.columns.tolist(), 
           filled=True, 
           rounded=True, 
           fontsize=10,
-          max_depth=3) # <--- Chỉnh hiển thị lúc vẽ ở đây
+          max_depth=3) 
 plt.title("Decision Tree Structure - Improvement V3 (Trained depth=5, Plotted depth=3)")
 plt.savefig('./Image/V3/Decision_Tree_Structure_v3.png')
+plt.close() # Đóng figure để giải phóng bộ nhớ
 
 # 4. Đánh giá (Tính toán dựa trên mô hình depth=5)
 y_pred = model_v3.predict(X_valid)
@@ -51,23 +52,23 @@ r2_train = model_v3.score(X_train, y_train)
 gap = r2_train - r2_test
 log_results("Model V3 - Missing Values (Depth 5)", mae, mse, rmse, r2_train, r2_test, gap)
 
-# 5. Vẽ biểu đồ Compare
+# 5. Vẽ biểu đồ Compare Actual vs Predicted
 plt.figure(figsize=(10, 6))
 sns.scatterplot(x=y_valid, y=y_pred, alpha=0.5)
 plt.plot([y_valid.min(), y_valid.max()], [y_valid.min(), y_valid.max()], '--r', linewidth=2)
 plt.xlabel("Actual Price")
 plt.ylabel("Predicted Price")
-plt.title("Compare Actual vs Predicted Prices - V3")
+plt.title("Compare Actual vs Predicted Prices - V3 (Depth 5)")
 plt.savefig('./Image/V3/Actual_vs_Predicted_V3.png')
+plt.close()
 
 # 6. Vẽ biểu đồ Feature Importance
 importances = model_v3.feature_importances_
 indices = np.argsort(importances)
 plt.figure(figsize=(10, 6))
-plt.title('Important Factors Affecting House Prices - V3')
+plt.title('Important Factors Affecting House Prices - V3 (Depth 5)')
 plt.barh(range(len(indices)), importances[indices], color='b', align='center')
 plt.yticks(range(len(indices)), [X.columns[i] for i in indices])
 plt.xlabel('Relative Importance')
 plt.savefig('./Image/V3/Feature_Importance_V3.png')
-
-plt.show()
+plt.close()
