@@ -26,23 +26,28 @@ X = df.drop(columns=['Price'])
 y = df['Price']
 X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# 2. Huấn luyện
-model_v3 = DecisionTreeRegressor(random_state=42, max_depth=3)
+# 2. Huấn luyện với max_depth=5 để tăng độ chính xác
+model_v3 = DecisionTreeRegressor(random_state=42, max_depth=5)
 model_v3.fit(X_train, y_train)
 
-# 3. Vẽ cấu trúc cây (Lưu vào V3)
+# 3. Vẽ cấu trúc cây (Chỉ hiển thị đến tầng thứ 3 để hình đẹp)
 plt.figure(figsize=(33,20))
-plot_tree(model_v3, feature_names=X.columns.tolist(), filled=True, rounded=True, fontsize=10)
-plt.title("Decision Tree Structure - Improvement V3 (Missing Values)")
+plot_tree(model_v3, 
+          feature_names=X.columns.tolist(), 
+          filled=True, 
+          rounded=True, 
+          fontsize=10,
+          max_depth=3) # <--- Chỉnh hiển thị lúc vẽ ở đây
+plt.title("Decision Tree Structure - Improvement V3 (Trained depth=5, Plotted depth=3)")
 plt.savefig('./Image/V3/Decision_Tree_Structure_v3.png')
 
-# 4. Đánh giá
+# 4. Đánh giá (Tính toán dựa trên mô hình depth=5)
 y_pred = model_v3.predict(X_valid)
 mae = mean_absolute_error(y_valid, y_pred)
 mse = mean_squared_error(y_valid, y_pred)
 rmse = np.sqrt(mse)
 r2 = r2_score(y_valid, y_pred)
-log_results("Model V3 - Missing Values", mae, mse, rmse, r2)
+log_results("Model V3 - Missing Values (Depth 5)", mae, mse, rmse, r2)
 
 # 5. Vẽ biểu đồ Compare
 plt.figure(figsize=(10, 6))
@@ -62,3 +67,5 @@ plt.barh(range(len(indices)), importances[indices], color='b', align='center')
 plt.yticks(range(len(indices)), [X.columns[i] for i in indices])
 plt.xlabel('Relative Importance')
 plt.savefig('./Image/V3/Feature_Importance_V3.png')
+
+plt.show()
